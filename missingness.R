@@ -1,0 +1,11 @@
+args<-commandArgs(trailingOnly=TRUE);stopifnot(length(args)==2)
+suppressPackageStartupMessages({library(dplyr);library(readr);library(stringr)})
+r<-readRDS(file.path(args[1],'01_raw_data/SEER_T1T2_colon_LNM_raw_renamed.rds'));out<-args[2]
+r<-r%>%mutate(year_dx=as.integer(year_dx_raw),age=if_else(str_detect(age_single_raw,'^90\\+'),90,parse_number(age_single_raw)),site=str_extract(primary_site_raw,'C18\\.[0-9]'),hist=as.integer(histology_code_raw),surg=as.integer(surgery_primary_raw),exam=as.integer(nodes_examined_raw),pos=as.integer(nodes_positive_raw),size=as.integer(tumor_size_raw),grade=as.character(grade_pathological_raw),t=case_when(str_starts(t_stage_raw,'T1')~'T1',str_starts(t_stage_raw,'T2')~'T2'),m=m_stage_raw)
+r<-r%>%filter(year_dx%in%2018:2022,site%in%c('C18.0',paste0('C18.',2:9)),t%in%c('T1','T2'),m%in%c('M0','M0(i+)'),age>=18,trimws(first_malignant_primary)=='Yes',hist%in%c(8140,8480,8481,8490),between(surg,20,90),between(exam,1,90),between(pos,0,90))
+stopifnot(nrow(r)==16859)
+r<-r%>%mutate(group=case_when(is.na(size)|!between(size,1,989)~'Excluded for size coding',!grade%in%c('1','2','3','4')~'Excluded for grade coding',size>150~'Excluded size above 150 mm',TRUE~'Included'),period=if_else(year_dx<=2021,'2018-2021','2022'),event=as.integer(pos>0))
+summary<-r%>%group_by(period,group)%>%summarise(N=n(),Events=sum(event),LNM_rate=mean(event),Age_median=median(age),T2_percent=mean(t=='T2')*100,Examined_nodes_median=median(exam),.groups='drop')
+write.csv(summary,file.path(out,'complete_case_selection_by_period.csv'),row.names=FALSE)
+totals<-r%>%count(group,name='N');stopifnot(totals$N[totals$group=='Included']==14498,totals$N[totals$group=='Excluded for size coding']==1727,totals$N[totals$group=='Excluded for grade coding']==622)
+print(summary)

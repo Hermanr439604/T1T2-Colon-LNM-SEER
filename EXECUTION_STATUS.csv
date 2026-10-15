@@ -1,0 +1,8 @@
+Component,Status,Boundary
+Primary model and 2022 evaluation,Previously rerun and verified,Saved author-held cohort; upstream extraction not rerun
+Current internal bootstrap and CV,Executed successfully,Development patients only; plan and seeds supplied
+Paired AUC uncertainty,Executed successfully,Existing saved models scored; historical PNI association not refitted
+Portable scoring entry,Executed successfully,Three explicitly hypothetical profiles
+Historical V2.2/V3.0 whole pipelines,Code preserved; not fully rerun,Do not claim complete end-to-end extraction reproduction
+Raw-to-V3.3 adapter,Syntax checked; not end-to-end executed,Requires authorized original CSV and dependencies
+SEER Stat extraction,Not independently rerun,Original session/specification still needed
