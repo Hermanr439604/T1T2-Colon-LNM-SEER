@@ -27,4 +27,4 @@ This is the V3.3 code resource for a manuscript being prepared for submission. T
 
 Third-party helper licensing is described in `THIRD_PARTY_NOTICE.txt`; the supplied Apache 2.0 text is included. A license for author-owned study code has not yet been assigned. Public visibility does not itself grant unrestricted reuse rights.
 
-AI-assisted tools supported code development, analysis reporting, and writing during the revision. Authors remain responsible for checking scientific content and approving the manuscript.
+AI-assisted tools supported code development during the revision. Authors remain responsible for checking scientific content and approving the manuscript.
